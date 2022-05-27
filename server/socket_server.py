@@ -5,7 +5,7 @@ import socket as sk
 sock = sk.socket(sk.AF_INET, sk.SOCK_DGRAM)
 
 # associamo il socket alla porta
-server_address = ('localhost', 54000)
+server_address = ('localhost', 51000)
 print ('\n\r starting up on %s port %s' % server_address)
 sock.bind(server_address)
 filesList = ['test.txt']
@@ -24,7 +24,9 @@ while True:
         else:
             sent = sock.sendto('Files list is empty.'.encode(), address)
     else:
-        if len(data.split()) != 2:
+        if len(data.split()) < 2:
+            sent = sock.sendto('Command not recognized'.encode(), address)
+        elif len(data.split()) < 2:
             sent = sock.sendto('With get and put commands is required one other argument FILE_NAME'.encode(), address)
         else:
             command , fileName = data.split(' ', 1);
