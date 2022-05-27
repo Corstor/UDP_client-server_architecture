@@ -26,7 +26,7 @@ while True:
     else:
         if len(data.split()) < 2:
             sent = sock.sendto('Command not recognized'.encode(), address)
-        elif len(data.split()) < 2:
+        elif len(data.split()) > 2:
             sent = sock.sendto('With get and put commands is required one other argument FILE_NAME'.encode(), address)
         else:
             command , fileName = data.split(' ', 1);
@@ -45,6 +45,13 @@ while True:
             else: 
                 if command == 'put':
                     sent = sock.sendto(fileName.encode(), address)
+                    with open(fileName, 'wb') as file:
+                        while True:
+                            bytes_read = sock.recv(BUFFER_SIZE)
+                            if not bytes_read:
+                                break
+                            file.write(bytes_read)
+                            print ('received file "%s"' % fileName)
                 else:
                     sent = sock.sendto('Command not recognized'.encode(), address)
                 
