@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import socket as sk
-import time
 
 # Creiamo il socket
 sock = sk.socket(sk.AF_INET, sk.SOCK_DGRAM)
@@ -14,13 +13,11 @@ BUFFER_SIZE = 4096
 
 while True:
     print('\n\r waiting to receive message...')
-    time.sleep(1)
     data, address = sock.recvfrom(BUFFER_SIZE)
 
     print('received %s bytes from %s' % (len(data), address))
     data = data.decode('utf8')
     print (data)
-    time.sleep(1)
     if data == 'list':
         if len(filesList) > 0:
             sent = sock.sendto(' '.join(filesList).encode(), address)
@@ -40,7 +37,6 @@ while True:
                             if not bytes_read:
                                 sent = sock.sendto(''.encode(), address)
                                 break # file transmitting done
-                            time.sleep(1)
                             sent = sock.sendto(bytes_read, address)
                 else:
                     sent = sock.sendto('File not found'.encode(), address)

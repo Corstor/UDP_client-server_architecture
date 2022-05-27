@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import socket as sk
-import time
 
 BUFFER_SIZE = 4096
 
@@ -14,23 +13,20 @@ while True:
     -list: see the list of all the files on the server\n \
     -get FILE_NAME: get a file from the server\n \
     -put FILE_PATH/FILE_NAME: put a file into the server\n\n')
-    time.sleep(1)
+    
     try:
         # invia il messaggio
         print ('sending ', command)
-        time.sleep(1)
         sent = socket.sendto(command.encode(), server_address)
         
         # Ricevete la risposta dal server
         print('\nwaiting to receive from')
-        time.sleep(1)
         data, server = socket.recvfrom(BUFFER_SIZE)
         data = data.decode('utf8')
         if data == 'get':
             command, fileName = command.split(' ', 1)
             with open(fileName, 'wb') as file:
                 while True:
-                    time.sleep(1)
                     bytes_read = socket.recv(BUFFER_SIZE)
                     if not bytes_read:
                         break
