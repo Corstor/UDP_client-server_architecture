@@ -2,6 +2,8 @@
 import socket as sk
 import time
 
+BUFFER_SIZE = 4096
+
 while True:
     # Creiamo il socket UDP
     socket = sk.socket(sk.AF_INET, sk.SOCK_DGRAM)
@@ -17,15 +19,28 @@ while True:
     try:
         # invia il messaggio
         print ('sending "%s"' % command)
-        time.sleep(2) #attende 2 secondi prima di inviare la richiesta
+        time.sleep(1)
         sent = socket.sendto(command.encode(), server_address)
         
         # Ricevete la risposta dal server
         print('\nwaiting to receive from')
-        data, server = socket.recvfrom(4096)
+        time.sleep(1)
+        data, server = socket.recvfrom(BUFFER_SIZE)
+        data = data.decode('utf8')
+        if data == 'get':
+            command, fileName = command.split(' ', 1)
+            with open(fileName, 'wb') as file:
+                while True:
+                    time.sleep(1)
+                    bytes_read = socket.recv(BUFFER_SIZE)
+                    if not bytes_read:
+                        break
+                    print (bytes_read)
+                    file.write(bytes_read)
+                    print("ciao")
+        
         #print(server)
-        time.sleep(2)
-        print ('received message "%s"' % data.decode('utf8'))
+        print ('received message "%s"' % data)
     except Exception as info:
         print(info)
     finally:
