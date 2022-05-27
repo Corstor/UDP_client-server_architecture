@@ -5,7 +5,7 @@ import socket as sk
 sock = sk.socket(sk.AF_INET, sk.SOCK_DGRAM)
 
 # associamo il socket alla porta
-server_address = ('localhost', 51000)
+server_address = ('localhost', 49000)
 print ('\n\r starting up on %s port %s' % server_address)
 sock.bind(server_address)
 filesList = ['test.txt']
@@ -45,13 +45,14 @@ while True:
             else: 
                 if command == 'put':
                     sent = sock.sendto(fileName.encode(), address)
+                    filesList.append(fileName)
                     with open(fileName, 'wb') as file:
                         while True:
                             bytes_read = sock.recv(BUFFER_SIZE)
                             if not bytes_read:
                                 break
                             file.write(bytes_read)
-                            print ('received file "%s"' % fileName)
+                        print ('received file "%s"' % fileName)
                 else:
                     sent = sock.sendto('Command not recognized'.encode(), address)
                 

@@ -7,7 +7,7 @@ while True:
     # Creiamo il socket UDP
     socket = sk.socket(sk.AF_INET, sk.SOCK_DGRAM)
     
-    server_address = ('localhost', 51000)
+    server_address = ('localhost', 49000)
 
     command = input('\n You can choose between:\n \
     -list: see the list of all the files on the server\n \
@@ -34,7 +34,6 @@ while True:
             data, server = socket.recvfrom(BUFFER_SIZE)
             data = data.decode('utf8')
             if data == 'get':
-                #command, fileName = command.split(' ', 1)
                 with open(fileName, 'wb') as file:
                     while True:
                         bytes_read = socket.recv(BUFFER_SIZE)
@@ -45,7 +44,7 @@ while True:
             print ('received message "%s"' % data)
     except Exception as info:
         print(info)
-    finally:
-        print ('closing socket')
-        socket.close()
+    #finally:
+        #print ('closing socket')
+        #socket.close()
 
