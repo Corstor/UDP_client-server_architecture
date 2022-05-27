@@ -10,15 +10,14 @@ while True:
     
     server_address = ('localhost', 54000)
 
-    print('\n You can choose between:\n')
-    print('-list: see the list of all the files on the server\n')
-    print('-get FILE_NAME: get a file from the server\n')
-    print('-put FILE_PATH/FILE_NAME: put a file into the server\n')
-    command = input()
-    
+    command = input('\n You can choose between:\n \
+    -list: see the list of all the files on the server\n \
+    -get FILE_NAME: get a file from the server\n \
+    -put FILE_PATH/FILE_NAME: put a file into the server\n\n')
+    time.sleep(1)
     try:
         # invia il messaggio
-        print ('sending "%s"' % command)
+        print ('sending ', command)
         time.sleep(1)
         sent = socket.sendto(command.encode(), server_address)
         
@@ -35,10 +34,7 @@ while True:
                     bytes_read = socket.recv(BUFFER_SIZE)
                     if not bytes_read:
                         break
-                    print (bytes_read)
-                    file.write(bytes_read)
-                    print("ciao")
-        
+                    file.write(bytes_read)        
         #print(server)
         print ('received message "%s"' % data)
     except Exception as info:

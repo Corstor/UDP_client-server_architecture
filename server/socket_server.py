@@ -41,7 +41,7 @@ while True:
                                 sent = sock.sendto(''.encode(), address)
                                 break # file transmitting done
                             time.sleep(1)
-                            sent = sock.sendall(bytes_read)
+                            sent = sock.sendto(bytes_read, address)
                 else:
                     sent = sock.sendto('File not found'.encode(), address)
             else: 
