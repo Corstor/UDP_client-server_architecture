@@ -41,7 +41,9 @@ while True:
                             break
                         file.write(bytes_read)        
             #print(server)
-            print ('received message "%s"' % data)
+        else:
+            data = socket.recv(BUFFER_SIZE).decode()
+        print ('received message "%s"' % data)
     except Exception as info:
         print(info)
     #finally:
