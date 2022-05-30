@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import socket as sk
 
+from os import listdir
+from os.path import isfile, join
+
 # Creiamo il socket
 sock = sk.socket(sk.AF_INET, sk.SOCK_DGRAM)
 
@@ -8,8 +11,9 @@ sock = sk.socket(sk.AF_INET, sk.SOCK_DGRAM)
 server_address = ('localhost', 49000)
 print ('\n\r starting up on %s port %s' % server_address)
 sock.bind(server_address)
-filesList = ['test.txt']
 BUFFER_SIZE = 4096
+
+filesList = [f for f in listdir("./serverFiles") if isfile(join("./serverFiles", f))]
 
 while True:
     print('\n\r waiting to receive message...')
