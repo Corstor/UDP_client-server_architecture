@@ -46,7 +46,7 @@ while True:
         print ('received message "%s"' % data)
     except Exception as info:
         print(info)
-    #finally:
-        #print ('closing socket')
-        #socket.close()
+    finally:
+        print ('closing socket')
+        socket.close()
 
