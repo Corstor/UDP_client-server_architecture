@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import socket as sk
+import shlex
 
 from os import listdir
 from os.path import isfile, join
@@ -28,12 +29,12 @@ while True:
         else:
             sent = sock.sendto('Files list is empty.'.encode(), address)
     else:
-        if len(data.split()) < 2:
+        if len(shlex.split(data)) < 2:
             sent = sock.sendto('Command not recognized'.encode(), address)
-        elif len(data.split()) > 2:
+        elif len(shlex.split(data)) > 2:
             sent = sock.sendto('With get and put commands is required one other argument FILE_NAME'.encode(), address)
         else:
-            command , fileName = data.split(' ', 1);
+            command , fileName = shlex.split(data);
             if command == 'get':
                 if fileName in filesList:
                     with open('./serverFiles/' + fileName, 'rb') as file:
