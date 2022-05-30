@@ -44,7 +44,6 @@ while True:
                     sent = sock.sendto('File not found'.encode(), address)
             else: 
                 if command == 'put':
-                    sent = sock.sendto(fileName.encode(), address)
                     filesList.append(fileName)
                     with open(fileName, 'wb') as file:
                         while True:
@@ -52,7 +51,7 @@ while True:
                             if not bytes_read:
                                 break
                             file.write(bytes_read)
-                        print ('received file "%s"' % fileName)
+                        sent = sock.sendto(fileName.encode(), address)
                 else:
                     sent = sock.sendto('Command not recognized'.encode(), address)
                 
