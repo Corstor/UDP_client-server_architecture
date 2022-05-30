@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import socket as sk
 import shlex
-
+import os
 from os import listdir
 from os.path import isfile, join
 
@@ -49,6 +49,7 @@ while True:
                     sent = sock.sendto('File not found'.encode(), address)
             else: 
                 if command == 'put':
+                    fileName = os.path.basename(fileName)
                     filesList.append(fileName)
                     with open('./serverFiles/' + fileName, 'wb') as file:
                         while True:
