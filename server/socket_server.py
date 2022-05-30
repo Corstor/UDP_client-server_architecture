@@ -14,9 +14,9 @@ print ('\n\r starting up on %s port %s' % server_address)
 sock.bind(server_address)
 BUFFER_SIZE = 4096
 
-filesList = [f for f in listdir("./serverFiles") if isfile(join("./serverFiles", f))]
-
 while True:
+    filesList = [f for f in listdir("./serverFiles") if isfile(join("./serverFiles", f))]
+    
     print('\n\r waiting to receive message...')
     data, address = sock.recvfrom(BUFFER_SIZE)
 
@@ -25,7 +25,7 @@ while True:
     print (data)
     if data == 'list':
         if len(filesList) > 0:
-            sent = sock.sendto(' '.join(filesList).encode(), address)
+            sent = sock.sendto('\n'.join(filesList).encode(), address)
         else:
             sent = sock.sendto('Files list is empty.'.encode(), address)
     else:
