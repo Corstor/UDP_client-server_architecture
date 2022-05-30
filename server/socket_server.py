@@ -36,7 +36,7 @@ while True:
             command , fileName = data.split(' ', 1);
             if command == 'get':
                 if fileName in filesList:
-                    with open(fileName, 'rb') as file:
+                    with open('./serverFiles/' + fileName, 'rb') as file:
                         sent = sock.sendto('get'.encode(), address)
                         while True:
                             bytes_read = file.read(BUFFER_SIZE)
@@ -49,7 +49,7 @@ while True:
             else: 
                 if command == 'put':
                     filesList.append(fileName)
-                    with open(fileName, 'wb') as file:
+                    with open('./serverFiles/' + fileName, 'wb') as file:
                         while True:
                             bytes_read = sock.recv(BUFFER_SIZE)
                             if not bytes_read:
