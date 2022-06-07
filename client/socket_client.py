@@ -2,6 +2,7 @@
 import socket as sk
 import os
 import shlex
+import time
 
 BUFFER_SIZE = 4096
 
@@ -26,10 +27,13 @@ while True:
                 command , fileName = shlex.split(command);
                 if command == 'put':
                     with open(fileName, 'rb') as file:
+                        print("1")
                         file_size = os.path.getsize(fileName)#bytes inviati
                         print ('sending ', command + ' ' + fileName + ' ' + file_size + 'bytes')
                         sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
+                        sent = socket.sendto((str(file_size)).encode(), server_address)
                         while True:
+                            time.sleep(0.0005)
                             bytes_read = file.read(BUFFER_SIZE)
                             if not bytes_read:
                                 sent = socket.sendto(''.encode(), server_address)
@@ -44,7 +48,9 @@ while True:
                     data = data.decode('utf8')
                     if data == 'get':
                         data = data.encode()
-                        
+                        origin_file_size, server = socket.recvfrom(BUFFER_SIZE)
+                        origin_file_size = int(origin_file_size.decode('utf8'))
+                        print(origin_file_size)
                         with open(fileName, 'wb') as file:
                             while True:
                                 bytes_read = socket.recv(BUFFER_SIZE)
