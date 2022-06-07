@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import socket as sk
+import os
 import shlex
 
 BUFFER_SIZE = 4096
@@ -25,7 +26,8 @@ while True:
                 command , fileName = shlex.split(command);
                 if command == 'put':
                     with open(fileName, 'rb') as file:
-                        print ('sending ', command + ' ' + fileName)
+                        file_size = os.path.getsize(fileName)#bytes inviati
+                        print ('sending ', command + ' ' + fileName + ' ' + file_size + 'bytes')
                         sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
                         while True:
                             bytes_read = file.read(BUFFER_SIZE)
@@ -42,12 +44,17 @@ while True:
                     data = data.decode('utf8')
                     if data == 'get':
                         data = data.encode()
+                        
                         with open(fileName, 'wb') as file:
                             while True:
                                 bytes_read = socket.recv(BUFFER_SIZE)
                                 if not bytes_read:
                                     break
-                                file.write(bytes_read)            
+                                file.write(bytes_read)  
+                        file_size = os.path.getsize(fileName) #bytes ricevuti
+                        print(file_size, "bytes")
+                        if file_size != origin_file_size:
+                            print('Some packets may lost')
         print ('received message "%s"' % data.decode('utf8'))
     except Exception as info:
         print(info)
