@@ -41,7 +41,8 @@ while True:
                     received_file_size, server = socket.recvfrom(BUFFER_SIZE)
                     received_file_size = int(received_file_size.decode('utf8'))
                     if file_size != received_file_size:
-                        print(str(file_size - received_file_size) + ' bytes lost')
+                        print('\nERROR\n')
+                        print(str(file_size - received_file_size) + ' bytes lost\n')
                 else:
                     sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
                     # Ricevete la risposta dal server
@@ -60,7 +61,8 @@ while True:
                                 file.write(bytes_read)  
                         file_size = os.path.getsize(fileName) #bytes ricevuti
                         if file_size != origin_file_size:
-                            print(str(origin_file_size - file_size) + ' bytes lost')
+                            print('\nERROR\n')
+                            print(str(origin_file_size - file_size) + ' bytes lost\n')
         print ('received message "%s"' % data.decode('utf8'))
     except Exception as info:
         print(info)
