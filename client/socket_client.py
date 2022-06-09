@@ -8,7 +8,7 @@ BUFFER_SIZE = 4096
 SERVER_ADDRESS = ('localhost', 49000)
 
 
-def get(fileName):
+def get(command, fileName):
     
     # Send command to server
     socket.sendto((command + ' "' + fileName + '"').encode(), SERVER_ADDRESS)
@@ -48,7 +48,7 @@ def get(fileName):
         print("The file is not in the server")
         
         
-def put(fileName):
+def put(command, fileName):
     
     with open(fileName, 'rb') as file:
 
@@ -96,9 +96,9 @@ while True:
             command , fileName = shlex.split(command);
             
             if command == 'put':
-                put(fileName)
+                put(command, fileName)
             elif command == 'get':
-                get(fileName)
+                get(command, fileName)
             else:
                 data = "Error".encode()
                 print("The command is not supported")
