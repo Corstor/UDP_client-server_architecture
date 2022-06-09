@@ -66,7 +66,7 @@ while True:
 
         if len(filesList) > 0:
             sock.sendto('\n'.join(filesList).encode(), address)
-            print("End command list")
+            print("Files list sent")
         else:
             #There are no files in the server files
             sock.sendto('Files list is empty.'.encode(), address)
@@ -74,7 +74,7 @@ while True:
         if len(shlex.split(data)) < 2:
             #ERROR
             #When the command is not supported
-            sent = sock.sendto('Command not recognized'.encode(), address)
+            sock.sendto('Command not recognized'.encode(), address)
         elif len(shlex.split(data)) > 2:
             #ERROR
             #When the command is not complete
