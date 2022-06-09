@@ -12,6 +12,7 @@ def get(fileName, filesList, address, BUFFER_SIZE):
                     sock.sendto(''.encode(), address)
                     break # file transmitting done
                 sock.sendto(bytes_read, address)
+        print("End command get")
     else:
         #ERROR
         #When the file does not exist
@@ -31,6 +32,7 @@ def put(fileName, filesList, address, BUFFER_SIZE):
             sock.sendto(fileName.encode(), address)
         file_size = os.path.getsize('./serverFiles/' + fileName) #bytes ricevuti
         sock.sendto(str(file_size).encode(), address)
+        print("End command put")
 
 # -*- coding: utf-8 -*-
 import socket as sk
@@ -53,7 +55,7 @@ filesList = [f for f in listdir("./serverFiles") if isfile(join("./serverFiles",
 
 while True:
     
-    print('\n\r waiting to receive message...')
+    print('\n\rWaiting to receive message...')
     data, address = sock.recvfrom(BUFFER_SIZE)
 
     data = data.decode('utf8')
@@ -62,6 +64,7 @@ while True:
 
         if len(filesList) > 0:
             sock.sendto('\n'.join(filesList).encode(), address)
+            print("End command list")
         else:
             #There are no files in the server files
             sock.sendto('Files list is empty.'.encode(), address)
