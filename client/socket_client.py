@@ -9,11 +9,11 @@ SERVER_ADDRESS = ('localhost', 49000)
 
 def get(fileName):
     socket.sendto((command + ' "' + fileName + '"').encode(), SERVER_ADDRESS)
-    data = str(fileName).encode()
     received, server = socket.recvfrom(BUFFER_SIZE)
     if (int(received.decode('utf8')) == 1):
         origin_file_size, server = socket.recvfrom(BUFFER_SIZE)
         origin_file_size = int(origin_file_size.decode('utf8'))
+        print ('\nDownloading' + ' ' + fileName + ' ' + str(origin_file_size) + ' bytes')
         with open(fileName, 'wb') as file:
             while True:
                 bytes_read = socket.recv(BUFFER_SIZE)
@@ -25,16 +25,15 @@ def get(fileName):
             print('\nERROR\n')
             print(str(origin_file_size - file_size) + ' bytes lost\n')
         else:
-            print("\nThe file has been received correctly")
+            print("\nFile downloaded correctly")
     else:
         print('\nERROR\n')
         print("The file is not in the server")
-    return data
         
 def put(fileName):
     with open(fileName, 'rb') as file:
         file_size = os.path.getsize(fileName)#bytes inviati
-        print ('sending', command + ' ' + fileName + ' ' + str(file_size) + ' bytes')
+        print ('\nUploading' + ' ' + fileName + ' ' + str(file_size) + ' bytes')
         socket.sendto((command + ' "' + fileName + '"').encode(), SERVER_ADDRESS)
         while True:
             time.sleep(0.0001)
@@ -43,16 +42,16 @@ def put(fileName):
                 socket.sendto(''.encode(), SERVER_ADDRESS)
                 break # file transmitting done
             socket.sendto(bytes_read, SERVER_ADDRESS)
-    data, server = socket.recvfrom(BUFFER_SIZE)
     received_file_size, server = socket.recvfrom(BUFFER_SIZE)
     received_file_size = int(received_file_size.decode('utf8'))
     if file_size != received_file_size:
         print('\nERROR\n')
         print(str(file_size - received_file_size) + ' bytes lost\n')
-    return data
+    else:
+        print("\nFile uploaded correctly")
 
 while True:
-    # Creiamo il socket UDP
+    # Socket creation
     socket = sk.socket(sk.AF_INET, sk.SOCK_DGRAM)
         
     command = input('\nYou can choose between:\n \
@@ -64,22 +63,22 @@ while True:
         if len(shlex.split(command)) == 2:
             command , fileName = shlex.split(command);
             if command == 'put':
-                data = put(fileName)
+                put(fileName)
             else:
                 if command == 'get':
-                    data = get(fileName)
+                    get(fileName)
                 else:
                     data = "Error".encode()
                     print("The command is not supported")
         else:
             socket.sendto(command.encode(), SERVER_ADDRESS)
             data, server = socket.recvfrom(BUFFER_SIZE)
-            
-        print ('\n%s\n' % data.decode('utf8'))
+            print ('\n%s\n' % data.decode('utf8'))
+        
         
     except Exception as info:
         print(info)
     finally:
-        print ('closing socket')
+        print ('\nClosing socket')
         socket.close()
 
