@@ -47,7 +47,7 @@ while True:
                         sent = sock.sendto('get'.encode(), address)
                         sent = sock.sendto((str(file_size)).encode(), address)
                         while True:
-                            time.sleep(0.0005)
+                            time.sleep(0.0001)
                             bytes_read = file.read(BUFFER_SIZE)
                             if not bytes_read:
                                 sent = sock.sendto(''.encode(), address)
@@ -59,9 +59,6 @@ while True:
                 if command == 'put':
                     fileName = os.path.basename(fileName)
                     filesList.append(fileName)
-                    origin_file_size, server = sock.recvfrom(BUFFER_SIZE)
-                    origin_file_size = int(origin_file_size.decode('utf8'))
-                    print(origin_file_size)
                     with open('./serverFiles/' + fileName, 'wb') as file:
                         while True:
                             bytes_read = sock.recv(BUFFER_SIZE)
@@ -71,8 +68,7 @@ while True:
                         sent = sock.sendto(fileName.encode(), address)
                     file_size = os.path.getsize('./serverFiles/' + fileName) #bytes ricevuti
                     print(file_size, "bytes")
-                    if file_size != origin_file_size:
-                        print('Some packets may lost')
+                    sent = sock.sendto(str(file_size).encode(), address)
                 else:
                     sent = sock.sendto('Command not recognized'.encode(), address)
                 

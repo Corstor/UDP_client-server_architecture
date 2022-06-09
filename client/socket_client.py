@@ -27,19 +27,21 @@ while True:
                 command , fileName = shlex.split(command);
                 if command == 'put':
                     with open(fileName, 'rb') as file:
-                        print("1")
                         file_size = os.path.getsize(fileName)#bytes inviati
-                        print ('sending ', command + ' ' + fileName + ' ' + file_size + 'bytes')
+                        print ('sending ', command + ' ' + fileName + ' ' + str(file_size) + 'bytes')
                         sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
-                        sent = socket.sendto((str(file_size)).encode(), server_address)
                         while True:
-                            time.sleep(0.0005)
+                            time.sleep(0.0001)
                             bytes_read = file.read(BUFFER_SIZE)
                             if not bytes_read:
                                 sent = socket.sendto(''.encode(), server_address)
                                 break # file transmitting done
                             sent = socket.sendto(bytes_read, server_address)
                     data, server = socket.recvfrom(BUFFER_SIZE)
+                    received_file_size, server = socket.recvfrom(BUFFER_SIZE)
+                    received_file_size = int(received_file_size.decode('utf8'))
+                    if file_size != received_file_size:
+                        print(str(file_size - received_file_size) + ' bytes lost')
                 else:
                     sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
                     # Ricevete la risposta dal server
@@ -50,7 +52,6 @@ while True:
                         data = data.encode()
                         origin_file_size, server = socket.recvfrom(BUFFER_SIZE)
                         origin_file_size = int(origin_file_size.decode('utf8'))
-                        print(origin_file_size)
                         with open(fileName, 'wb') as file:
                             while True:
                                 bytes_read = socket.recv(BUFFER_SIZE)
@@ -58,9 +59,8 @@ while True:
                                     break
                                 file.write(bytes_read)  
                         file_size = os.path.getsize(fileName) #bytes ricevuti
-                        print(file_size, "bytes")
                         if file_size != origin_file_size:
-                            print('Some packets may lost')
+                            print(str(origin_file_size - file_size) + ' bytes lost')
         print ('received message "%s"' % data.decode('utf8'))
     except Exception as info:
         print(info)
