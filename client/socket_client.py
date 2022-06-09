@@ -56,6 +56,8 @@ while True:
                         if file_size != origin_file_size:
                             print('\nERROR\n')
                             print(str(origin_file_size - file_size) + ' bytes lost\n')
+                        else:
+                            print("\nThe file has been received correctly")
                     else:
                         print('\nERROR\n')
                         print("The file is not in the server")

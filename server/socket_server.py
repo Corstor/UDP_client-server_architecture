@@ -1,5 +1,4 @@
 def get(fileName, filesList, address, BUFFER_SIZE):
-    
     print("Received command get")
     if fileName in filesList:
         file_size = os.path.getsize('./serverFiles/' + fileName)#bytes inviati
@@ -10,7 +9,7 @@ def get(fileName, filesList, address, BUFFER_SIZE):
                 time.sleep(0.0001)
                 bytes_read = file.read(BUFFER_SIZE)
                 if not bytes_read:
-                    sock.sendto('File downloaded correctly'.encode(), address)
+                    sock.sendto(''.encode(), address)
                     break # file transmitting done
                 sock.sendto(bytes_read, address)
         print("File downloaded")
