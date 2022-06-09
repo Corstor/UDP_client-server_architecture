@@ -22,9 +22,7 @@ while True:
     print('\n\r waiting to receive message...')
     data, address = sock.recvfrom(BUFFER_SIZE)
 
-    print('received %s bytes from %s' % (len(data), address))
     data = data.decode('utf8')
-    print (data)
     if data == 'list':
         filesList = [f for f in listdir("./serverFiles") if isfile(join("./serverFiles", f))]
 
@@ -42,7 +40,6 @@ while True:
             if command == 'get':
                 if fileName in filesList:
                     file_size = os.path.getsize('./serverFiles/' + fileName)#bytes inviati
-                    print(file_size, "bytes")
                     with open('./serverFiles/' + fileName, 'rb') as file:
                         sent = sock.sendto('get'.encode(), address)
                         sent = sock.sendto((str(file_size)).encode(), address)
@@ -67,7 +64,6 @@ while True:
                             file.write(bytes_read)
                         sent = sock.sendto(fileName.encode(), address)
                     file_size = os.path.getsize('./serverFiles/' + fileName) #bytes ricevuti
-                    print(file_size, "bytes")
                     sent = sock.sendto(str(file_size).encode(), address)
                 else:
                     sent = sock.sendto('Command not recognized'.encode(), address)
