@@ -15,11 +15,10 @@ def get(fileName, filesList, address, BUFFER_SIZE):
     else:
         #ERROR
         #When the file does not exist
+        print("Error")
         sock.sendto('0'.encode(), address)
         
-
 def put(fileName, filesList, address, BUFFER_SIZE):
-   
         fileName = os.path.basename(fileName)
         filesList.append(fileName)
         with open('./serverFiles/' + fileName, 'wb') as file:
@@ -56,25 +55,26 @@ while True:
     
     print('\n\rWaiting to receive message...')
     data, address = sock.recvfrom(BUFFER_SIZE)
-
+    filesList = [f for f in listdir("./serverFiles") if isfile(join("./serverFiles", f))]
     data = data.decode('utf8')
     if data == 'list':
-        filesList = [f for f in listdir("./serverFiles") if isfile(join("./serverFiles", f))]
-
         if len(filesList) > 0:
             sock.sendto('\n'.join(filesList).encode(), address)
             print("End command list")
         else:
             #There are no files in the server files
+            print("Error")
             sock.sendto('Files list is empty.'.encode(), address)
     else:
         if len(shlex.split(data)) < 2:
             #ERROR
             #When the command is not supported
+            print("Error")
             sent = sock.sendto('Command not recognized'.encode(), address)
         elif len(shlex.split(data)) > 2:
             #ERROR
             #When the command is not complete
+            print("Error")
             sock.sendto('With get and put commands is required one other argument FILE_NAME'.encode(), address)
         else:
             command , fileName = shlex.split(data);
@@ -86,5 +86,6 @@ while True:
                 else:
                     #ERROR
                     #When the command is not supported
+                    print("Error")
                     sock.sendto('Command not recognized'.encode(), address)
                 

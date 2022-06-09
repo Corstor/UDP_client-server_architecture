@@ -41,7 +41,7 @@ while True:
             else:
                 if command == 'get':
                     sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
-                    data = data.encode()
+                    data = str(fileName).encode()
                     received, server = socket.recvfrom(BUFFER_SIZE)
                     if (int(received.decode('utf8')) == 1):
                         origin_file_size, server = socket.recvfrom(BUFFER_SIZE)
