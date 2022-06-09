@@ -3,7 +3,6 @@ import socket as sk
 import os
 import shlex
 import time
-import sys
 
 BUFFER_SIZE = 4096
 
@@ -12,7 +11,7 @@ while True:
     socket = sk.socket(sk.AF_INET, sk.SOCK_DGRAM)
     
     server_address = ('localhost', 49000)
-
+    
     command = input('\nYou can choose between:\n \
     list: see the list of all the files on the server\n \
     get FILE_NAME: get a file from the server\n \
@@ -67,10 +66,9 @@ while True:
             sent = socket.sendto(command.encode(), server_address)
             data, server = socket.recvfrom(BUFFER_SIZE)
         print ('\n%s\n' % data.decode('utf8'))
-        #sys.stdout.flush()
     except Exception as info:
         print(info)
     finally:
-        print ('closing socket', flush=True)
+        print ('closing socket')
         socket.close()
 
