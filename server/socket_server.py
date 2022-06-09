@@ -1,5 +1,4 @@
 def get(fileName, filesList, address, BUFFER_SIZE):
-    sock.sendto('get'.encode(), address)
     if fileName in filesList:
         file_size = os.path.getsize('./serverFiles/' + fileName)#bytes inviati
         with open('./serverFiles/' + fileName, 'rb') as file:

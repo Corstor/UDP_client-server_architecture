@@ -39,12 +39,8 @@ while True:
                     print('\nERROR\n')
                     print(str(file_size - received_file_size) + ' bytes lost\n')
             else:
-                sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
-                # Ricevete la risposta dal server
-                print('\nwaiting to receive from')
-                data, server = socket.recvfrom(BUFFER_SIZE)
-                data = data.decode('utf8')
-                if data == 'get':
+                if command == 'get':
+                    sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
                     data = data.encode()
                     received, server = socket.recvfrom(BUFFER_SIZE)
                     if (int(received.decode('utf8')) == 1):
@@ -63,6 +59,9 @@ while True:
                     else:
                         print('\nERROR\n')
                         print("The file is not in the server")
+                else:
+                    data = "Error".encode()
+                    print("The command is not supported")
         else:
             sent = socket.sendto(command.encode(), server_address)
             data, server = socket.recvfrom(BUFFER_SIZE)
