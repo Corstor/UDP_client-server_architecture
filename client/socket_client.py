@@ -18,39 +18,36 @@ while True:
     -put FILE_PATH/FILE_NAME: put a file into the server\n\n')
     
     try:
-        
-        if command == 'list':
-            sent = socket.sendto(command.encode(), server_address)
-            data, server = socket.recvfrom(BUFFER_SIZE)
-        else:
-            if len(shlex.split(command)) == 2:
-                command , fileName = shlex.split(command);
-                if command == 'put':
-                    with open(fileName, 'rb') as file:
-                        file_size = os.path.getsize(fileName)#bytes inviati
-                        print ('sending ', command + ' ' + fileName + ' ' + str(file_size) + 'bytes')
-                        sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
-                        while True:
-                            time.sleep(0.0001)
-                            bytes_read = file.read(BUFFER_SIZE)
-                            if not bytes_read:
-                                sent = socket.sendto(''.encode(), server_address)
-                                break # file transmitting done
-                            sent = socket.sendto(bytes_read, server_address)
-                    data, server = socket.recvfrom(BUFFER_SIZE)
-                    received_file_size, server = socket.recvfrom(BUFFER_SIZE)
-                    received_file_size = int(received_file_size.decode('utf8'))
-                    if file_size != received_file_size:
-                        print('\nERROR\n')
-                        print(str(file_size - received_file_size) + ' bytes lost\n')
-                else:
+        if len(shlex.split(command)) == 2:
+            command , fileName = shlex.split(command);
+            if command == 'put':
+                with open(fileName, 'rb') as file:
+                    file_size = os.path.getsize(fileName)#bytes inviati
+                    print ('sending ', command + ' ' + fileName + ' ' + str(file_size) + 'bytes')
                     sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
-                    # Ricevete la risposta dal server
-                    print('\nwaiting to receive from')
-                    data, server = socket.recvfrom(BUFFER_SIZE)
-                    data = data.decode('utf8')
-                    if data == 'get':
-                        data = data.encode()
+                    while True:
+                        time.sleep(0.0001)
+                        bytes_read = file.read(BUFFER_SIZE)
+                        if not bytes_read:
+                            sent = socket.sendto(''.encode(), server_address)
+                            break # file transmitting done
+                        sent = socket.sendto(bytes_read, server_address)
+                data, server = socket.recvfrom(BUFFER_SIZE)
+                received_file_size, server = socket.recvfrom(BUFFER_SIZE)
+                received_file_size = int(received_file_size.decode('utf8'))
+                if file_size != received_file_size:
+                    print('\nERROR\n')
+                    print(str(file_size - received_file_size) + ' bytes lost\n')
+            else:
+                sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
+                # Ricevete la risposta dal server
+                print('\nwaiting to receive from')
+                data, server = socket.recvfrom(BUFFER_SIZE)
+                data = data.decode('utf8')
+                if data == 'get':
+                    data = data.encode()
+                    received, server = socket.recvfrom(BUFFER_SIZE)
+                    if (int(received.decode('utf8')) == 1):
                         origin_file_size, server = socket.recvfrom(BUFFER_SIZE)
                         origin_file_size = int(origin_file_size.decode('utf8'))
                         with open(fileName, 'wb') as file:
@@ -63,7 +60,13 @@ while True:
                         if file_size != origin_file_size:
                             print('\nERROR\n')
                             print(str(origin_file_size - file_size) + ' bytes lost\n')
-        print ('received message "%s"' % data.decode('utf8'))
+                    else:
+                        print('\nERROR\n')
+                        print("The file is not in the server")
+        else:
+            sent = socket.sendto(command.encode(), server_address)
+            data, server = socket.recvfrom(BUFFER_SIZE)
+        print ('received message \n"%s"' % data.decode('utf8'))
     except Exception as info:
         print(info)
     finally:
