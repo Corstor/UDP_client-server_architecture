@@ -3,6 +3,7 @@ import socket as sk
 import os
 import shlex
 import time
+import sys
 
 BUFFER_SIZE = 4096
 
@@ -12,10 +13,10 @@ while True:
     
     server_address = ('localhost', 49000)
 
-    command = input('\n You can choose between:\n \
-    -list: see the list of all the files on the server\n \
-    -get FILE_NAME: get a file from the server\n \
-    -put FILE_PATH/FILE_NAME: put a file into the server\n\n')
+    command = input('\nYou can choose between:\n \
+    list: see the list of all the files on the server\n \
+    get FILE_NAME: get a file from the server\n \
+    put FILE_PATH/FILE_NAME: put a file into the server\n\n')
     
     try:
         if len(shlex.split(command)) == 2:
@@ -23,7 +24,7 @@ while True:
             if command == 'put':
                 with open(fileName, 'rb') as file:
                     file_size = os.path.getsize(fileName)#bytes inviati
-                    print ('sending ', command + ' ' + fileName + ' ' + str(file_size) + 'bytes')
+                    print ('sending', command + ' ' + fileName + ' ' + str(file_size) + ' bytes')
                     sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
                     while True:
                         time.sleep(0.0001)
@@ -41,7 +42,6 @@ while True:
             else:
                 sent = socket.sendto((command + ' "' + fileName + '"').encode(), server_address)
                 # Ricevete la risposta dal server
-                print('\nwaiting to receive from')
                 data, server = socket.recvfrom(BUFFER_SIZE)
                 data = data.decode('utf8')
                 if data == 'get':
@@ -66,10 +66,11 @@ while True:
         else:
             sent = socket.sendto(command.encode(), server_address)
             data, server = socket.recvfrom(BUFFER_SIZE)
-        print ('received message \n"%s"' % data.decode('utf8'))
+        print ('\n%s\n' % data.decode('utf8'))
+        #sys.stdout.flush()
     except Exception as info:
         print(info)
     finally:
-        print ('closing socket')
+        print ('closing socket', flush=True)
         socket.close()
 

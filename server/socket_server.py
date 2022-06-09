@@ -73,16 +73,15 @@ while True:
         elif len(shlex.split(data)) > 2:
             #ERROR
             #When the command is not complete
-            sock.sendto('With get and put commands is required one other argument FILE_NAME'.encode(), address)
+            sock.sendto('With get and put commands is required one argument: FILE_NAME'.encode(), address)
         else:
             command , fileName = shlex.split(data);
             if command == 'get':
                 get(fileName, filesList, address, BUFFER_SIZE)
-            else: 
-                if command == 'put':
-                    put(fileName, filesList, address, BUFFER_SIZE)
-                else:
-                    #ERROR
-                    #When the command is not supported
-                    sock.sendto('Command not recognized'.encode(), address)
+            elif command == 'put':
+                put(fileName, filesList, address, BUFFER_SIZE)
+            else:
+                #ERROR
+                #When the command is not supported
+                sock.sendto('Command not recognized'.encode(), address)
                 
