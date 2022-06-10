@@ -53,7 +53,6 @@ def get(command, fileName):
 def put(command, fileName):
     
     with open(fileName, 'rb') as file:
-
         # Bytes to send
         file_size = os.path.getsize(fileName)
         print ('\nUploading' + ' ' + fileName + ' ' + str(file_size) + ' bytes')
@@ -71,16 +70,16 @@ def put(command, fileName):
                 
             socket.sendto(bytes_read, SERVER_ADDRESS)
             
-    # Receive file size from the server
-    received_file_size, server = socket.recvfrom(BUFFER_SIZE)
-    received_file_size = int(received_file_size.decode('utf8'))
-    
-    # Check for error
-    if file_size != received_file_size:
-        print('\nERROR\n')
-        print(str(file_size - received_file_size) + ' bytes lost\n')
-    else:
-        print("\nFile uploaded correctly")
+        # Receive file size from the server
+        received_file_size, server = socket.recvfrom(BUFFER_SIZE)
+        received_file_size = int(received_file_size.decode('utf8'))
+        
+        # Check for error
+        if file_size != received_file_size:
+            print('\nERROR\n')
+            print(str(file_size - received_file_size) + ' bytes lost\n')
+        else:
+            print("\nFile uploaded correctly")
 
 
 while True:
