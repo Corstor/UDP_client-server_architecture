@@ -91,7 +91,7 @@ while True:
     command = input('\nYou can choose between:\n \
     list: see the list of all the files on the server\n \
     get FILE_NAME: get a file from the server\n \
-    put FILE_PATH/FILE_NAME: put a file into the server\n\n')
+    put (FILE_PATH)/FILE_NAME: put a file into the server\n\n')
     
     try:
         if len(shlex.split(command)) == 2:
@@ -105,17 +105,19 @@ while True:
                 data = "Error".encode()
                 print("The command is not supported")
         else:
-            #Send command to the server
-            socket.sendto(command.encode(), SERVER_ADDRESS)
-            data, server = socket.recvfrom(BUFFER_SIZE)
-            
-            #Print server response
-            print ('\n%s\n' % data.decode('utf8'))
+            if command == "get":
+                print("The get command expects the FILE_NAME as a parameter")
+            else:
+                if command == "put":
+                    print("The put command expects a (FILE_PATH)/FILE_NAME as a parameter")
+                else:
+                    #Send command to the server
+                    socket.sendto(command.encode(), SERVER_ADDRESS)
+                    data, server = socket.recvfrom(BUFFER_SIZE)
+                    
+                    #Print server response
+                    print ('\n%s\n' % data.decode('utf8'))
         
         
     except Exception as info:
         print(info)
-        
-    finally:
-        print ('\nClosing socket')
-        socket.close()
