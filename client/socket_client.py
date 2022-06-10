@@ -101,6 +101,12 @@ while True:
                 put(command, fileName)
             elif command == 'get':
                 get(command, fileName)
+            else:
+                socket.sendto(command.encode(), SERVER_ADDRESS)
+                data, server = socket.recvfrom(BUFFER_SIZE)
+                
+                #Print server response
+                print ('\n%s\n' % data.decode('utf8'))
         elif command == 'exit':
             socket.close()
             print('\nSocket closed')
