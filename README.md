@@ -10,6 +10,11 @@ Run socket_server.py and socket_client.py, then from the client run one of the f
 - `put (FILE_PATH/)FILE_NAME`: to put a file on the server, you can add the FILE_PATH if the file is in another directory.
 - `exit`: to close the application.
 
+### Please note
+if the file has spaces use quotes "".
+
+e.g.  get "FILE_NAME".
+
 ## Test
 
 In the folders client and server/serverFiles there are some files to test the application.
