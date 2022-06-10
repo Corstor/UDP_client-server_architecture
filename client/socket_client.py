@@ -12,6 +12,8 @@ def get(command, fileName):
     
     # Send command to server
     socket.sendto((command + ' "' + fileName + '"').encode(), SERVER_ADDRESS)
+    
+    # Response from the server to start the operation
     received, server = socket.recvfrom(BUFFER_SIZE)
     
     # Receive file size from the server

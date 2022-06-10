@@ -18,9 +18,12 @@ def get(fileName, filesList):
         # Bytes to send
         file_size = os.path.getsize('./serverFiles/' + fileName)
         
-        # Send file size
         with open('./serverFiles/' + fileName, 'rb') as file:
+            
+            # Message to the client to start the operation
             sock.sendto('1'.encode(), ADDRESS)
+            
+            # Send file size
             sock.sendto((str(file_size)).encode(), ADDRESS)
 
             # Send bytes
