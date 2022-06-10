@@ -104,9 +104,15 @@ while True:
             
     else:
         if len(shlex.split(data)) < 2:
-            # ERROR
-            # When the command is not supported
-            sock.sendto('Command not recognized'.encode(), ADDRESS)
+            if (data == "get"):
+                sock.sendto('The get command requires a FILE_NAME as a parameter'.encode(), ADDRESS)
+            else:
+                if (data == "put"):
+                    sock.sendto("The put command requires a (FILE_PATH)/FILE_NAME as a parameter".encode(), ADDRESS)
+                else:
+                    # ERROR
+                    # When the command is not supported
+                    sock.sendto('Command not recognized'.encode(), ADDRESS)
         elif len(shlex.split(data)) > 2:
             # ERROR
             # When the command is not complete

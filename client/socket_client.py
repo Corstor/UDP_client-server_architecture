@@ -105,19 +105,15 @@ while True:
                 data = "Error".encode()
                 print("The command is not supported")
         else:
-            if command == "get":
-                print("The get command expects the FILE_NAME as a parameter")
-            else:
-                if command == "put":
-                    print("The put command expects a (FILE_PATH)/FILE_NAME as a parameter")
-                else:
-                    #Send command to the server
-                    socket.sendto(command.encode(), SERVER_ADDRESS)
-                    data, server = socket.recvfrom(BUFFER_SIZE)
-                    
-                    #Print server response
-                    print ('\n%s\n' % data.decode('utf8'))
+            #Send command to the server
+            socket.sendto(command.encode(), SERVER_ADDRESS)
+            data, server = socket.recvfrom(BUFFER_SIZE)
+            
+            #Print server response
+            print ('\n%s\n' % data.decode('utf8'))
         
         
     except Exception as info:
         print(info)
+    finally:
+        socket.close()
